@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EasyAspCoreReactTemplate.Data;
+using Vite.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+
+// Add Vite services for React integration
+builder.Services.AddViteServices(options =>
+{
+    options.Base = "/app/";
+    options.Manifest = ".vite/manifest.json";
+    options.Server.AutoRun = false;
+    options.Server.Port = 5173;
+    options.Server.UseReactRefresh = true;
+    options.Server.PackageDirectory = "ClientApp";
+    options.Server.PackageManager = "npm";
+});
 
 var app = builder.Build();
 
@@ -30,6 +43,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRouting();
 
@@ -38,5 +52,11 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorPages()
     .WithStaticAssets();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebSockets();
+    app.UseViteDevelopmentServer(true);
+}
 
 app.Run();

@@ -1,0 +1,21 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Vite.AspNetCore
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/app/" />
+    <title>@ViewData["Title"] - React App</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+</head>
+<body>
+    <main role="main" id="app">
+        @RenderBody()
+    </main>
+
+    <script type="module" vite-src="~/src/main.jsx"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
