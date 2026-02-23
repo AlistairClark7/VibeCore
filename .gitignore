@@ -54,5 +54,9 @@ node_modules/
 package-lock.json
 package.json
 
-*/app.db
+# SQLite database files
 *.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
