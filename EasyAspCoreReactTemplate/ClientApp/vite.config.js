@@ -1,25 +1,26 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
-  appType: 'custom',
-  plugins: [react()],
+  appType: "custom",
+  plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
     strictPort: true,
     hmr: {
-      protocol: 'ws',
-      host: 'localhost',
+      protocol: "ws",
+      host: "localhost",
     },
   },
-  base: '/app/',
+  base: "/app/",
   build: {
-    outDir: '../wwwroot/app',
+    outDir: "../wwwroot/app",
     emptyOutDir: true,
-    manifest: '.vite/manifest.json',
+    manifest: ".vite/manifest.json",
     rollupOptions: {
-      input: './src/main.jsx',
+      input: ["./src/main.jsx", "./tailwind.config.css"],
     },
   },
 }));

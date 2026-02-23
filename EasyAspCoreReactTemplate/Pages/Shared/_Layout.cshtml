@@ -5,48 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - EasyAspCoreReactTemplate</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/EasyAspCoreReactTemplate.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" vite-href="~/tailwind.config.css" />
+    <link rel="stylesheet" href="~/EasyAspCoreReactTemplate.styles.css" asp-append-version="true" />
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">EasyAspCoreReactTemplate</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                    </li>
-                </ul>
-                <partial name="_LoginPartial"/>
-            </div>
+<header class="sticky top-0 z-40 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
+    <nav class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
+        <div class="flex items-center gap-3">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/20 text-sky-200">
+                VC
+            </span>
+            <a class="text-lg font-semibold tracking-tight text-white" asp-area="" asp-page="/Index">Vibe Core</a>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-slate-300">
+            <a class="transition hover:text-white" asp-area="" asp-page="/Index">Home</a>
+            <a class="transition hover:text-white" asp-area="" asp-page="/Privacy">Privacy</a>
+            <partial name="_LoginPartial" />
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+<main role="main" class="mx-auto w-full max-w-6xl px-4 py-10">
+    @RenderBody()
+</main>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 - EasyAspCoreReactTemplate - <a asp-area="" asp-page="/Privacy">Privacy</a>
+<footer class="border-t border-slate-800/60 py-8 text-sm text-slate-400">
+    <div class="mx-auto w-full max-w-6xl px-4">
+        &copy; 2026 - Vibe Core - <a class="hover:text-slate-200" asp-area="" asp-page="/Privacy">Privacy</a>
     </div>
 </footer>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>
