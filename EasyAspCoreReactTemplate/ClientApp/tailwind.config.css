@@ -4,30 +4,60 @@
 @source "../Pages/**/*.cshtml";
 @source "../Areas/**/*.cshtml";
 
+/* Base styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 html {
-  min-height: 100%;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
-  min-height: 100%;
-  margin: 0;
-  background-color: #0f172a;
-  color: #e2e8f0;
   font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  @apply bg-white text-slate-900;
 }
 
-a {
-  color: #7dd3fc;
-  transition: color 0.2s ease;
+html.dark body {
+  @apply bg-slate-950 text-slate-100;
 }
 
-a:hover {
-  color: #bae6fd;
+/* Root element */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Code blocks */
+code {
+  @apply rounded px-1.5 py-0.5 text-sm font-mono;
 }
 
 code {
-  border-radius: 0.375rem;
-  background-color: rgba(30, 41, 59, 0.6);
-  padding: 0.125rem 0.375rem;
-  font-size: 0.875rem;
+  @apply bg-slate-100 text-slate-900;
+}
+
+html.dark code {
+  @apply bg-slate-800/60 text-slate-100;
+}
+
+/* Links */
+a {
+  @apply transition-colors;
+}
+
+a {
+  @apply text-sky-600 hover:text-sky-700;
+}
+
+html.dark a {
+  @apply text-sky-300 hover:text-sky-200;
 }

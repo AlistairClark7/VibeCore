@@ -2,12 +2,15 @@ import "vite/modulepreload-polyfill";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import App from "./App.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="/app">
-      <App />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter basename="/app">
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
 );
