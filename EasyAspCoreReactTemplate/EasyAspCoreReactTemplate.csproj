@@ -22,6 +22,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.3" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
         <PackageReference Include="Vite.AspNetCore" Version="2.4.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -54,6 +55,17 @@
                 <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             </ResolvedFileToPublish>
         </ItemGroup>
+    </Target>
+
+    <Target Name="GenerateSwagger" Condition=" '$(Configuration)' == 'Debug' And Exists('ClientApp/node_modules') ">
+        <Exec Command="dotnet tool restore" />
+        <Exec Command="dotnet tool run swagger tofile --output ClientApp/swagger.json $(OutputPath)$(AssemblyName).dll v1 " />
+        <Exec WorkingDirectory="ClientApp" Command="npm run generate-openapi-client" />
+        <Exec WorkingDirectory="ClientApp" Command="npm run format-openapi-client" />
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(DOTNET_WATCH)' == 'true' And Exists('ClientApp/node_modules') ">
+        <Exec WorkingDirectory="ClientApp" Command="npm run update-api" ContinueOnError="true" />
     </Target>
 
 </Project>

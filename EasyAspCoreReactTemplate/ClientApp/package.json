@@ -6,18 +6,27 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fetch-swagger": "node scripts/fetch-swagger.js",
+    "generate-client": "openapi --input swagger.json --output src/api --client fetch --useOptions --useUnionTypes && prettier --write src/api",
+    "update-api": "npm run fetch-swagger && npm run generate-client",
+    "watch-api": "chokidar '../Areas/Api/**' '../Areas/Api/Models/**' '../Models/**' '../Program.cs' -c 'npm run update-api'"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "@tanstack/react-query-devtools": "^5.91.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.0.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@tailwindcss/vite": "^4.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "chokidar-cli": "^3.0.0",
+    "openapi-typescript-codegen": "^0.30.0",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4.0.3",
     "vite": "^6.0.3"
   }

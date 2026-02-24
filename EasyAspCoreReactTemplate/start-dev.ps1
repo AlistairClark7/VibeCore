@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 # Start ASP.NET Core and Vite dev server for development
 
 Write-Host "Starting React + ASP.NET Core Development Environment..." -ForegroundColor Green
@@ -36,6 +37,7 @@ Write-Host ""
 Write-Host "✨ Vite dev server will be started and stopped with this script" -ForegroundColor Cyan
 Write-Host "✨ Hot Module Replacement (HMR) is enabled" -ForegroundColor Cyan
 Write-Host "✨ React Fast Refresh is configured" -ForegroundColor Cyan
+Write-Host "✨ API watcher will auto-generate TypeScript client on changes" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "React App will be available at: https://localhost:XXXX/app" -ForegroundColor Yellow
 Write-Host ""
@@ -47,9 +49,16 @@ Write-Host ""
 Write-Host ""
 Write-Host "Starting Vite dev server..." -ForegroundColor Cyan
 Set-Location $clientAppPath
-$viteProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "npm run dev" -WorkingDirectory $clientAppPath -PassThru -WindowStyle Hidden
+$viteProcess = Start-Process -FilePath "npm" -ArgumentList "run", "dev" -PassThru
 
 Start-Sleep -Seconds 2
+
+# Start API watcher in background
+Write-Host ""
+Write-Host "Starting API watcher for TypeScript client generation..." -ForegroundColor Cyan
+$apiWatcherProcess = Start-Process -FilePath "npm" -ArgumentList "run", "watch-api" -PassThru
+
+Start-Sleep -Seconds 1
 
 # Start ASP.NET Core app
 Write-Host ""
@@ -62,6 +71,11 @@ try {
     $dotnetExitCode = $LASTEXITCODE
 } finally {
     Write-Host ""
+    Write-Host "Stopping API watcher..." -ForegroundColor Yellow
+    if ($apiWatcherProcess -and -not $apiWatcherProcess.HasExited) {
+        Stop-Process -Id $apiWatcherProcess.Id -Force -ErrorAction SilentlyContinue
+        $apiWatcherProcess.WaitForExit(3000) | Out-Null
+    }
     Write-Host "Stopping Vite dev server..." -ForegroundColor Yellow
     if ($viteProcess -and -not $viteProcess.HasExited) {
         Stop-Process -Id $viteProcess.Id -Force -ErrorAction SilentlyContinue

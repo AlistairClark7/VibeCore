@@ -16,6 +16,16 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
+// Add API Controllers
+builder.Services.AddControllers();
+
+// Add Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "EasyAspCoreReactTemplate API", Version = "v1" });
+});
+
 // Add Vite services for React integration
 builder.Services.AddViteServices(options =>
 {
@@ -34,6 +44,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "EasyAspCoreReactTemplate API v1");
+    });
 }
 else
 {
@@ -49,6 +64,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorPages()
     .WithStaticAssets();
