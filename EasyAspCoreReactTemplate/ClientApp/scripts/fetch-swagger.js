@@ -1,15 +1,23 @@
 import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 async function generateSwagger() {
   try {
+    // Get the directory where this script is located
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
     // Read launchSettings.json to get the port
+    // scripts/ -> ClientApp/ -> EasyAspCoreReactTemplate/ -> Properties/
     const launchSettingsPath = join(
-      process.cwd(),
+      __dirname,
+      "..",
       "..",
       "Properties",
       "launchSettings.json",
     );
+
     const launchSettings = JSON.parse(
       await readFile(launchSettingsPath, "utf-8"),
     );
@@ -30,7 +38,7 @@ async function generateSwagger() {
         const response = await fetch(
           `http://localhost:${port}/swagger/v1/swagger.json`,
           {
-            signal: AbortSignal.timeout(5000),
+            signal: AbortSignal.timeout(10000),
           },
         );
 
@@ -54,6 +62,11 @@ async function generateSwagger() {
     return false;
   } catch (error) {
     console.error("Error:", error.message);
+    if (error.code === "ENOENT") {
+      console.error(
+        "Could not find launchSettings.json. Make sure you're in the ClientApp directory.",
+      );
+    }
     return false;
   }
 }

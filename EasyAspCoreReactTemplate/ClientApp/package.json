@@ -10,7 +10,7 @@
     "fetch-swagger": "node scripts/fetch-swagger.js",
     "generate-client": "openapi --input swagger.json --output src/api --client fetch --useOptions --useUnionTypes && prettier --write src/api",
     "update-api": "npm run fetch-swagger && npm run generate-client",
-    "watch-api": "chokidar '../Areas/Api/**' '../Areas/Api/Models/**' '../Models/**' '../Program.cs' -c 'npm run update-api'"
+    "watch-api": "npm run update-api && chokidar '../Areas/Api/**' '../Areas/Api/Models/**' '../Models/**' '../Program.cs' -c 'npm run update-api'"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",

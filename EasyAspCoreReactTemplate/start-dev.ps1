@@ -53,37 +53,45 @@ $viteProcess = Start-Process -FilePath "npm" -ArgumentList "run", "dev" -PassThr
 
 Start-Sleep -Seconds 2
 
-# Start API watcher in background
-Write-Host ""
-Write-Host "Starting API watcher for TypeScript client generation..." -ForegroundColor Cyan
-$apiWatcherProcess = Start-Process -FilePath "npm" -ArgumentList "run", "watch-api" -PassThru
-
-Start-Sleep -Seconds 1
-
-# Start ASP.NET Core app
+# Start ASP.NET Core app (in background, we'll wait for it to be ready)
 Write-Host ""
 Write-Host "Starting ASP.NET Core application..." -ForegroundColor Cyan
 Set-Location $PSScriptRoot
+$dotnetProcess = Start-Process -FilePath "dotnet" -ArgumentList "watch", "run" -PassThru
 
-$dotnetExitCode = 0
-try {
-    dotnet watch run
-    $dotnetExitCode = $LASTEXITCODE
-} finally {
+# Wait a bit for app to start
+Start-Sleep -Seconds 3
+
+# Start API watcher in background (will retry if app not ready yet)
+Write-Host ""
+Write-Host "Starting API watcher for TypeScript client generation..." -ForegroundColor Cyan
+Set-Location $clientAppPath
+$apiWatcherProcess = Start-Process -FilePath "npm" -ArgumentList "run", "watch-api" -PassThru
+
+Write-Host ""
+Write-Host "All services started! Press Ctrl+C to stop all servers" -ForegroundColor Green
+Write-Host ""
+
+# Function to cleanup on exit
+function Cleanup {
     Write-Host ""
-    Write-Host "Stopping API watcher..." -ForegroundColor Yellow
-    if ($apiWatcherProcess -and -not $apiWatcherProcess.HasExited) {
-        Stop-Process -Id $apiWatcherProcess.Id -Force -ErrorAction SilentlyContinue
-        $apiWatcherProcess.WaitForExit(3000) | Out-Null
-    }
-    Write-Host "Stopping Vite dev server..." -ForegroundColor Yellow
-    if ($viteProcess -and -not $viteProcess.HasExited) {
-        Stop-Process -Id $viteProcess.Id -Force -ErrorAction SilentlyContinue
-        $viteProcess.WaitForExit(3000) | Out-Null
-    }
+    Write-Host "Stopping all services..." -ForegroundColor Yellow
+    
+    Get-Process npm -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    
     Write-Host "Cleanup complete" -ForegroundColor Green
 }
 
-if ($dotnetExitCode -ne 0) {
-    exit $dotnetExitCode
+# Set up Ctrl+C handler
+$null = Register-EngineEvent -SourceIdentifier PowerShell.Exiting -Action { Cleanup }
+
+# Keep running until user presses Ctrl+C
+try {
+    while ($true) {
+        Start-Sleep -Seconds 1
+    }
+} catch {
+    Cleanup
 }
