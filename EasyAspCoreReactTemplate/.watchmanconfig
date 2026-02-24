@@ -1,0 +1,7 @@
+{
+  "version": "4.9.0",
+  "project_name": "EasyAspCoreReactTemplate",
+  "fsevents_watch_root": true,
+  "ignore_dirs": ["node_modules", "bin", "obj", "wwwroot", ".vs", ".vscode", ".git", "ClientApp/node_modules", "ClientApp/dist", "ClientApp/.vite"],
+  "ignore_vcs": true
+}

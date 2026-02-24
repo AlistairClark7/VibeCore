@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-EasyAspCoreReactTemplate-e6ff2ab0-5ba6-4ec5-9823-168cb1d6bdaf</UserSecretsId>
+        <RazorCompileOnBuild>true</RazorCompileOnBuild>
+        <RazorCompileOnPublish>true</RazorCompileOnPublish>
     </PropertyGroup>
 
     <ItemGroup>

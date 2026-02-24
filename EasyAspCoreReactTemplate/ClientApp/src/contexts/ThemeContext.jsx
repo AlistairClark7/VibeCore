@@ -3,25 +3,19 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(null);
-
-  // Initialize theme from localStorage on mount
-  useEffect(() => {
+  // Initialize from localStorage immediately to prevent undefined state
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "light";
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)",
     ).matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+    return savedTheme || (prefersDark ? "dark" : "light");
+  });
 
-    setTheme(initialTheme);
-    applyTheme(initialTheme);
-  }, []);
-
-  // Update theme when it changes
+  // Apply theme on mount and when it changes
   useEffect(() => {
-    if (theme) {
-      applyTheme(theme);
-    }
+    applyTheme(theme);
   }, [theme]);
 
   const applyTheme = (newTheme) => {

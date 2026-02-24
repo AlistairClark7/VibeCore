@@ -58,7 +58,7 @@ Set-Location $PSScriptRoot
 
 $dotnetExitCode = 0
 try {
-    dotnet run
+    dotnet watch run
     $dotnetExitCode = $LASTEXITCODE
 } finally {
     Write-Host ""
