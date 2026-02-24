@@ -32,13 +32,13 @@ function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-sky-800 dark:from-sky-500 dark:to-sky-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-sky-600/50 dark:hover:shadow-sky-500/30 transition-all duration-300 hover:-translate-y-1">
+                <button className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-sky-800 text-white font-bold shadow-md hover:shadow-lg hover:shadow-sky-600/50 transition-all duration-300 hover:-translate-y-1">
                   Get Started
                   <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </button>
-                <button className="inline-flex items-center justify-center px-8 py-3 rounded-xl border-2 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold hover:bg-slate-100 dark:hover:bg-slate-900/50 transition-all duration-300">
+                <button className="inline-flex items-center justify-center px-8 py-3 rounded-xl border-2 border-slate-400 text-slate-400 font-semibold hover:bg-slate-100/50 transition-all duration-300">
                   Learn More
                 </button>
               </div>
@@ -143,6 +143,7 @@ function Home() {
           <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">Accessible</p>
         </div>
       </div>
+
     </section>
   );
 }
