@@ -10,12 +10,21 @@
     "type": "project"
   },
   "sourceName": "VibeCore",
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(true)",
+          "exclude": ["bin/**", "obj/**", "node_modules/**"]
+        }
+      ]
+    }
+  ],
   "preferNameDirectory": true,
   "symbols": {
     "webProjectName": {
-      "type": "derived",
-      "valueSource": "name",
-      "valueTransform": "append(Web)",
+      "type": "computed",
+      "value": "name + \"Web\"",
       "replaces": "VibeCoreWeb"
     },
     "skipRestore": {
