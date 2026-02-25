@@ -44,7 +44,7 @@
         <Exec WorkingDirectory="ClientApp" Command="npm install" />
     </Target>
 
-    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <Target Name="PublishReact" AfterTargets="ComputeFilesToPublish">
         <!-- Install Node modules -->
         <Exec WorkingDirectory="ClientApp" Command="npm install" />
         <!-- Build the React app -->
@@ -59,16 +59,4 @@
             </ResolvedFileToPublish>
         </ItemGroup>
     </Target>
-
-    <Target Name="GenerateSwagger" Condition=" '$(Configuration)' == 'Debug' And Exists('ClientApp/node_modules') ">
-        <Exec Command="dotnet tool restore" />
-        <Exec Command="dotnet tool run swagger tofile --output ClientApp/swagger.json $(OutputPath)$(AssemblyName).dll v1 " />
-        <Exec WorkingDirectory="ClientApp" Command="npm run generate-openapi-client" />
-        <Exec WorkingDirectory="ClientApp" Command="npm run format-openapi-client" />
-    </Target>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(DOTNET_WATCH)' == 'true' And Exists('ClientApp/node_modules') ">
-        <Exec WorkingDirectory="ClientApp" Command="npm run update-api" ContinueOnError="true" />
-    </Target>
-
 </Project>
