@@ -15,7 +15,12 @@
       "modifiers": [
         {
           "condition": "(true)",
-          "exclude": ["bin/**", "obj/**", "node_modules/**"]
+          "exclude": [
+            "**/.git/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/node_modules/**"
+          ]
         }
       ]
     }
