@@ -182,6 +182,7 @@ npm run watch-api
    ```csharp
    [ApiController]
    [Route("api/[controller]")]
+   [Authorize]
    public class MyController : ControllerBase
    {
        [HttpGet]
@@ -294,6 +295,91 @@ Edit `VibeCore/ClientApp/vite.config.js` for Vite settings.
 ### Launch Settings
 
 Modify ports and other launch settings in `VibeCore/Properties/launchSettings.json`.
+
+## 🔐 Authentication & Email
+
+### Development
+
+This project uses **ASP.NET Core Identity** for authentication, which is handled automatically by the framework. In development, email confirmations are typically skipped or logged to console.
+
+### Production
+
+For production, you **must configure an email provider** to send confirmation emails and password reset links. The recommended approach is to use **[Resend](https://resend.com/)**, a modern email API for developers.
+
+#### Setting Up Resend
+
+1. **Create a Resend account** at https://resend.com and get your API key
+
+2. **Install the Resend NuGet package**:
+   ```bash
+   dotnet add package Resend
+   ```
+
+3. **Add to appsettings.json**:
+   ```json
+   {
+     "Email": {
+       "Provider": "Resend",
+       "FromAddress": "noreply@yourdomain.com",
+       "ApiKey": "re_YOUR_API_KEY_HERE"
+     }
+   }
+   ```
+
+4. **Create an email service** in your project:
+   ```csharp
+   public interface IEmailService
+   {
+       Task SendEmailAsync(string to, string subject, string body);
+   }
+
+   public class ResendEmailService : IEmailService
+   {
+       private readonly IConfiguration _config;
+       private readonly ResendClient _client;
+
+       public ResendEmailService(IConfiguration config)
+       {
+           _config = config;
+           var apiKey = config["Email:ApiKey"];
+           _client = new ResendClient(apiKey);
+       }
+
+       public async Task SendEmailAsync(string to, string subject, string body)
+       {
+           var message = new EmailMessage
+           {
+               From = _config["Email:FromAddress"],
+               To = new[] { to },
+               Subject = subject,
+               HtmlBody = body
+           };
+
+           await _client.EmailSendAsync(message);
+       }
+   }
+   ```
+
+5. **Register in Program.cs**:
+   ```csharp
+   builder.Services.AddScoped<IEmailService, ResendEmailService>();
+   ```
+
+6. **Use in Identity configuration** (in Program.cs):
+   ```csharp
+   builder.Services.Configure<IdentityOptions>(options =>
+   {
+       options.SignIn.RequireConfirmedEmail = true;
+   });
+   ```
+
+### User Registration & Email Confirmation
+
+The default Identity scaffolding handles registration. Users will receive confirmation emails that they must verify before logging in. Make sure to:
+
+- Configure the email confirmation link to point to your production domain
+- Store the email provider credentials securely (use Azure Key Vault, AWS Secrets Manager, or environment variables)
+- Never commit API keys to version control
 
 ## 🏭 Production Build
 
