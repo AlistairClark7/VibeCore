@@ -8,5 +8,7 @@ export { OpenAPI } from "./core/OpenAPI";
 export type { OpenAPIConfig } from "./core/OpenAPI";
 
 export type { TodoItem } from "./models/TodoItem";
+export type { UserInfoDto } from "./models/UserInfoDto";
 
 export { TodosService } from "./services/TodosService";
+export { UserService } from "./services/UserService";

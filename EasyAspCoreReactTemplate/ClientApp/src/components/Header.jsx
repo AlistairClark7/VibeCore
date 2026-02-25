@@ -1,5 +1,22 @@
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useTheme } from "../contexts/ThemeContext";
+import "../components/AuthHeader.js";
+
 function Header() {
+  const { theme } = useTheme();
+  const authHeaderRef = useRef(null);
+
+  useEffect(() => {
+    if (authHeaderRef.current) {
+      if (theme === "dark") {
+        authHeaderRef.current.classList.add("dark");
+      } else {
+        authHeaderRef.current.classList.remove("dark");
+      }
+    }
+  }, [theme]);
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/60 dark:border-slate-800/40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-2xl">
       <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
@@ -24,21 +41,8 @@ function Header() {
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-4">
-          <a
-            className="rounded-full border border-slate-300/60 dark:border-slate-700/60 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 transition hover:border-slate-400/60 dark:hover:border-slate-400/60 hover:text-slate-900 dark:hover:text-white"
-            href="/Identity/Account/Register"
-          >
-            Register
-          </a>
-          <a
-            className="rounded-full bg-gradient-to-r from-sky-500 to-sky-700 px-4 py-2 text-xs font-semibold text-white transition hover:from-sky-600 hover:to-sky-800 shadow-md hover:shadow-lg"
-            href="/Identity/Account/Login"
-          >
-            Login
-          </a>
-        </div>
+        {/* Authentication Header Web Component */}
+        <auth-header ref={authHeaderRef}></auth-header>
       </nav>
     </header>
   );

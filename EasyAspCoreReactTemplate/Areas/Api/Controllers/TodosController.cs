@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EasyAspCoreReactTemplate.Data;
 using EasyAspCoreReactTemplate.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyAspCoreReactTemplate.Areas.Api.Controllers;
 
 [Area("Api")]
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TodosController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
