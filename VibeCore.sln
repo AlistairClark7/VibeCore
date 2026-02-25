@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibeCore", "VibeCore\VibeCore.csproj", "{765BE9E2-6E86-47A0-AD31-817D289F3004}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibeCoreWeb", "VibeCoreWeb\VibeCoreWeb.csproj", "{765BE9E2-6E86-47A0-AD31-817D289F3004}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

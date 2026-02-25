@@ -311,11 +311,13 @@ For production, you **must configure an email provider** to send confirmation em
 1. **Create a Resend account** at https://resend.com and get your API key
 
 2. **Install the Resend NuGet package**:
+
    ```bash
    dotnet add package Resend
    ```
 
 3. **Add to appsettings.json**:
+
    ```json
    {
      "Email": {
@@ -327,6 +329,7 @@ For production, you **must configure an email provider** to send confirmation em
    ```
 
 4. **Create an email service** in your project:
+
    ```csharp
    public interface IEmailService
    {
@@ -361,6 +364,7 @@ For production, you **must configure an email provider** to send confirmation em
    ```
 
 5. **Register in Program.cs**:
+
    ```csharp
    builder.Services.AddScoped<IEmailService, ResendEmailService>();
    ```
