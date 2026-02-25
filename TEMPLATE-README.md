@@ -69,7 +69,7 @@ When you create a new project with `-n YourProjectName`, the following will be a
 - Namespace references
 - Docker image names
 - API titles
-- And all other references to "EasyAspCoreReactTemplate"
+- And all other references to "VibeCore"
 
 ## License
 

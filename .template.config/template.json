@@ -2,14 +2,14 @@
   "$schema": "http://json.schemastore.org/template",
   "author": "Ali Clark",
   "classifications": ["Web", "SPA", "ASP.NET", "React"],
-  "identity": "EasyAspCoreReactTemplate",
+  "identity": "VibeCore",
   "name": "ASP.NET Core with React and Vite",
   "shortName": "vibe-core",
   "tags": {
     "language": "C#",
     "type": "project"
   },
-  "sourceName": "EasyAspCoreReactTemplate",
+  "sourceName": "VibeCore",
   "preferNameDirectory": true,
   "symbols": {
     "skipRestore": {
@@ -21,10 +21,10 @@
   },
   "primaryOutputs": [
     {
-      "path": "EasyAspCoreReactTemplate.sln"
+      "path": "VibeCore.sln"
     },
     {
-      "path": "EasyAspCoreReactTemplate/EasyAspCoreReactTemplate.csproj"
+      "path": "VibeCore/VibeCore.csproj"
     }
   ],
   "postActions": [

@@ -59,7 +59,7 @@ React auto-reloads with new types
 1. **Start the backend**:
 
    ```bash
-   cd EasyAspCoreReactTemplate
+   cd VibeCore
    dotnet watch
    ```
 
