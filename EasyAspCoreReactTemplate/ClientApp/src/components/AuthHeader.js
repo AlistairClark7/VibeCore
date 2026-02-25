@@ -1,7 +1,7 @@
 class AuthHeader extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: "open" });
     this.userInfo = null;
   }
 
@@ -12,18 +12,18 @@ class AuthHeader extends HTMLElement {
 
   async fetchUserInfo() {
     try {
-      const response = await fetch('/api/user/current');
+      const response = await fetch("/api/user/current");
       if (response.ok) {
         this.userInfo = await response.json();
         this.render();
       }
     } catch (error) {
-      console.error('Failed to fetch user info:', error);
+      console.error("Failed to fetch user info:", error);
     }
   }
 
   render() {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       :host {
         display: contents;
@@ -135,27 +135,27 @@ class AuthHeader extends HTMLElement {
       }
     `;
 
-    const ul = document.createElement('ul');
+    const ul = document.createElement("ul");
 
     if (this.userInfo?.isAuthenticated) {
       // Logged in state
-      const greetingLi = document.createElement('li');
-      const greetingLink = document.createElement('a');
-      greetingLink.href = '/Identity/Account/Manage/Index';
+      const greetingLi = document.createElement("li");
+      const greetingLink = document.createElement("a");
+      greetingLink.href = "/Identity/Account/Manage/Index";
       greetingLink.textContent = `Hello ${this.userInfo.userName}!`;
-      greetingLink.title = 'Manage';
+      greetingLink.title = "Manage";
       greetingLi.appendChild(greetingLink);
 
-      const logoutLi = document.createElement('li');
-      const logoutForm = document.createElement('form');
-      logoutForm.className = 'logout-form';
-      logoutForm.action = '/Identity/Account/Logout';
-      logoutForm.method = 'post';
+      const logoutLi = document.createElement("li");
+      const logoutForm = document.createElement("form");
+      logoutForm.className = "logout-form";
+      logoutForm.action = "/Identity/Account/Logout";
+      logoutForm.method = "post";
 
-      const logoutBtn = document.createElement('button');
-      logoutBtn.type = 'submit';
-      logoutBtn.className = 'logout-btn';
-      logoutBtn.textContent = 'Logout';
+      const logoutBtn = document.createElement("button");
+      logoutBtn.type = "submit";
+      logoutBtn.className = "logout-btn";
+      logoutBtn.textContent = "Logout";
 
       logoutForm.appendChild(logoutBtn);
       logoutLi.appendChild(logoutForm);
@@ -164,28 +164,28 @@ class AuthHeader extends HTMLElement {
       ul.appendChild(logoutLi);
     } else {
       // Logged out state
-      const registerLi = document.createElement('li');
-      const registerLink = document.createElement('a');
-      registerLink.href = '/Identity/Account/Register';
-      registerLink.className = 'register-btn';
-      registerLink.textContent = 'Register';
+      const registerLi = document.createElement("li");
+      const registerLink = document.createElement("a");
+      registerLink.href = "/Identity/Account/Register";
+      registerLink.className = "register-btn";
+      registerLink.textContent = "Register";
       registerLi.appendChild(registerLink);
 
-      const loginLi = document.createElement('li');
-      const loginLink = document.createElement('a');
-      loginLink.href = '/Identity/Account/Login';
-      loginLink.className = 'login-btn';
-      loginLink.textContent = 'Login';
+      const loginLi = document.createElement("li");
+      const loginLink = document.createElement("a");
+      loginLink.href = "/Identity/Account/Login";
+      loginLink.className = "login-btn";
+      loginLink.textContent = "Login";
       loginLi.appendChild(loginLink);
 
       ul.appendChild(registerLi);
       ul.appendChild(loginLi);
     }
 
-    this.shadowRoot.innerHTML = '';
+    this.shadowRoot.innerHTML = "";
     this.shadowRoot.appendChild(style);
     this.shadowRoot.appendChild(ul);
   }
 }
 
-customElements.define('auth-header', AuthHeader);
+customElements.define("auth-header", AuthHeader);
