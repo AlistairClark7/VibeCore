@@ -12,6 +12,12 @@
   "sourceName": "VibeCore",
   "preferNameDirectory": true,
   "symbols": {
+    "webProjectName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "append(Web)",
+      "replaces": "VibeCoreWeb"
+    },
     "skipRestore": {
       "type": "parameter",
       "datatype": "bool",
@@ -24,7 +30,7 @@
       "path": "VibeCore.sln"
     },
     {
-      "path": "VibeCore/VibeCore.csproj"
+      "path": "VibeCoreWeb/VibeCoreWeb.csproj"
     }
   ],
   "postActions": [
