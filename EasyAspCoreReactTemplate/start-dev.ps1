@@ -57,8 +57,6 @@ Start-Sleep -Seconds 2
 Write-Host ""
 Write-Host "Starting ASP.NET Core application..." -ForegroundColor Cyan
 Set-Location $PSScriptRoot
-$env:DOTNET_WATCH_SUPPRESS_STATIC_FILE_HANDLING = "1"
-$env:DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH = "1"
 $dotnetProcess = Start-Process -FilePath "dotnet" -ArgumentList "watch", "run", "--non-interactive" -PassThru
 
 # Wait a bit for app to start

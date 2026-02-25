@@ -6,12 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-EasyAspCoreReactTemplate-e6ff2ab0-5ba6-4ec5-9823-168cb1d6bdaf</UserSecretsId>
         <RazorCompileOnBuild>true</RazorCompileOnBuild>
-        <RazorCompileOnPublish>true</RazorCompileOnPublish>
+        <RazorCompileOnPublish>true</RazorCompileOnPublish><DefaultItemExcludes>$(DefaultItemExcludes);ClientApp\**\*.ts;ClientApp\**\*.tsx;ClientApp\**\*.jsx;ClientApp\**\*.js;**\*.db;**\*.db-shm;**\*.db-wal</DefaultItemExcludes>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.3" />
@@ -19,16 +15,23 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.3" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
         <PackageReference Include="Vite.AspNetCore" Version="2.4.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Don't publish the ClientApp source files, but do include the output -->
         <Content Remove="ClientApp\**" />
-        <None Include="ClientApp\**" Exclude="ClientApp\node_modules\**" />
+        
+        <None Include="ClientApp\**" Exclude="ClientApp\node_modules\**" Watch="false" />
+        
+        <TypeScriptCompile Update="ClientApp\**" Watch="false" />
+        
+        <UpToDateCheckInput Remove="ClientApp\**" />
+        <UpToDateCheckBuilt Remove="ClientApp\**" />
+
+        <Content Update="wwwroot\app\**" Watch="false" />
+        <None Update="ClientApp\swagger.json" Watch="false" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('ClientApp\node_modules') ">
