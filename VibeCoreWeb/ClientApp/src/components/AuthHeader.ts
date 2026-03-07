@@ -1,8 +1,14 @@
+interface UserInfo {
+  isAuthenticated: boolean;
+  userName: string;
+}
+
 class AuthHeader extends HTMLElement {
+  private userInfo: UserInfo | null = null;
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.userInfo = null;
   }
 
   connectedCallback() {
@@ -182,9 +188,9 @@ class AuthHeader extends HTMLElement {
       ul.appendChild(loginLi);
     }
 
-    this.shadowRoot.innerHTML = "";
-    this.shadowRoot.appendChild(style);
-    this.shadowRoot.appendChild(ul);
+    this.shadowRoot!.innerHTML = "";
+    this.shadowRoot!.appendChild(style);
+    this.shadowRoot!.appendChild(ul);
   }
 }
 

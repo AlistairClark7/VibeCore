@@ -1,11 +1,19 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useTheme } from "../contexts/ThemeContext";
-import "../components/AuthHeader.js";
+import "../components/AuthHeader";
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "auth-header": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
+}
 
 function Header() {
   const { theme } = useTheme();
-  const authHeaderRef = useRef(null);
+  const authHeaderRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (authHeaderRef.current) {

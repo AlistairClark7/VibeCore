@@ -1,16 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-// Temporary API client until swagger generation works
+interface TodoItem {
+  id: number;
+  title: string;
+  isCompleted: boolean;
+  createdAt: string;
+  completedAt: string | null;
+}
+
 const API_BASE = "";
 
 const api = {
-  getTodos: async () => {
+  getTodos: async (): Promise<TodoItem[]> => {
     const res = await fetch(`${API_BASE}/api/Todos`);
     if (!res.ok) throw new Error("Failed to fetch todos");
     return res.json();
   },
-  createTodo: async (data) => {
+  createTodo: async (data: Pick<TodoItem, "title" | "isCompleted">): Promise<TodoItem> => {
     const res = await fetch(`${API_BASE}/api/Todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,7 +26,7 @@ const api = {
     if (!res.ok) throw new Error("Failed to create todo");
     return res.json();
   },
-  updateTodo: async ({ id, ...data }) => {
+  updateTodo: async ({ id, ...data }: TodoItem): Promise<void> => {
     const res = await fetch(`${API_BASE}/api/Todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -27,13 +34,13 @@ const api = {
     });
     if (!res.ok) throw new Error("Failed to update todo");
   },
-  deleteTodo: async (id) => {
+  deleteTodo: async (id: number): Promise<void> => {
     const res = await fetch(`${API_BASE}/api/Todos/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error("Failed to delete todo");
   },
-  completeTodo: async (id) => {
+  completeTodo: async (id: number): Promise<void> => {
     const res = await fetch(`${API_BASE}/api/Todos/${id}/complete`, {
       method: "PATCH",
     });
@@ -58,7 +65,7 @@ export default function TodoList() {
   const createMutation = useMutation({
     mutationFn: api.createTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
       setNewTodoTitle("");
     },
   });
@@ -66,25 +73,25 @@ export default function TodoList() {
   const updateMutation = useMutation({
     mutationFn: api.updateTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: api.deleteTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
   const completeMutation = useMutation({
     mutationFn: api.completeTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodoTitle.trim()) return;
     createMutation.mutate({ title: newTodoTitle, isCompleted: false });

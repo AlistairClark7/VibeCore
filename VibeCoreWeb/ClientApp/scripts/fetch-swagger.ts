@@ -2,7 +2,7 @@ import { readFile, writeFile } from "fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-async function generateSwagger() {
+async function generateSwagger(): Promise<boolean> {
   try {
     // Get the directory where this script is located
     const __filename = fileURLToPath(import.meta.url);
@@ -29,7 +29,7 @@ async function generateSwagger() {
     const port = applicationUrl.match(/localhost:(\d+)/)?.[1] || "5036";
 
     console.log(
-      `📡 Fetching swagger from http://localhost:${port}/swagger/v1/swagger.json...`,
+      `Fetching swagger from http://localhost:${port}/swagger/v1/swagger.json...`,
     );
 
     // Try to fetch swagger.json with retries
@@ -45,24 +45,24 @@ async function generateSwagger() {
         if (response.ok) {
           const swaggerJson = await response.text();
           await writeFile("swagger.json", swaggerJson, "utf-8");
-          console.log("✓ Swagger JSON downloaded successfully");
+          console.log("Swagger JSON downloaded successfully");
           return true;
         }
       } catch (error) {
         if (i < 3) {
-          console.log(`⏳ Attempt ${i} failed, retrying in 2 seconds...`);
+          console.log(`Attempt ${i} failed, retrying in 2 seconds...`);
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       }
     }
 
     console.log(
-      "⚠️  Could not fetch swagger.json - server may not be ready yet",
+      "Could not fetch swagger.json - server may not be ready yet",
     );
     return false;
   } catch (error) {
-    console.error("Error:", error.message);
-    if (error.code === "ENOENT") {
+    console.error("Error:", (error as Error).message);
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       console.error(
         "Could not find launchSettings.json. Make sure you're in the ClientApp directory.",
       );

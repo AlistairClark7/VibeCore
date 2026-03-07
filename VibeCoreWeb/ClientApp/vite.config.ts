@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true,
     manifest: ".vite/manifest.json",
     rollupOptions: {
-      input: ["./src/main.jsx", "./tailwind.config.css"],
+      input: ["./src/main.tsx", "./tailwind.config.css"],
     },
   },
 }));
