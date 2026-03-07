@@ -1,95 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
-interface TodoItem {
-  id: number;
-  title: string;
-  isCompleted: boolean;
-  createdAt: string;
-  completedAt: string | null;
-}
-
-const API_BASE = "";
-
-const api = {
-  getTodos: async (): Promise<TodoItem[]> => {
-    const res = await fetch(`${API_BASE}/api/Todos`);
-    if (!res.ok) throw new Error("Failed to fetch todos");
-    return res.json();
-  },
-  createTodo: async (data: Pick<TodoItem, "title" | "isCompleted">): Promise<TodoItem> => {
-    const res = await fetch(`${API_BASE}/api/Todos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error("Failed to create todo");
-    return res.json();
-  },
-  updateTodo: async ({ id, ...data }: TodoItem): Promise<void> => {
-    const res = await fetch(`${API_BASE}/api/Todos/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, ...data }),
-    });
-    if (!res.ok) throw new Error("Failed to update todo");
-  },
-  deleteTodo: async (id: number): Promise<void> => {
-    const res = await fetch(`${API_BASE}/api/Todos/${id}`, {
-      method: "DELETE",
-    });
-    if (!res.ok) throw new Error("Failed to delete todo");
-  },
-  completeTodo: async (id: number): Promise<void> => {
-    const res = await fetch(`${API_BASE}/api/Todos/${id}/complete`, {
-      method: "PATCH",
-    });
-    if (!res.ok) throw new Error("Failed to complete todo");
-  },
-};
+import {
+  useTodos,
+  useCreateTodo,
+  useUpdateTodo,
+  useDeleteTodo,
+  useCompleteTodo,
+} from "../api/todos";
 
 export default function TodoList() {
   const [newTodoTitle, setNewTodoTitle] = useState("");
-  const queryClient = useQueryClient();
 
-  const {
-    data: todos = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["todos"],
-    queryFn: api.getTodos,
-    refetchInterval: 5000, // Refetch every 5 seconds for "realtime" data
-  });
-
-  const createMutation = useMutation({
-    mutationFn: api.createTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-      setNewTodoTitle("");
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: api.updateTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: api.deleteTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
-
-  const completeMutation = useMutation({
-    mutationFn: api.completeTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
+  const { data: todos = [], isLoading, error } = useTodos();
+  const createMutation = useCreateTodo();
+  const updateMutation = useUpdateTodo();
+  const deleteMutation = useDeleteTodo();
+  const completeMutation = useCompleteTodo();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,7 +86,7 @@ export default function TodoList() {
                 checked={todo.isCompleted}
                 onChange={() => {
                   if (!todo.isCompleted) {
-                    completeMutation.mutate(todo.id);
+                    completeMutation.mutate(todo.id!);
                   } else {
                     updateMutation.mutate({
                       ...todo,
@@ -179,13 +104,13 @@ export default function TodoList() {
                   {todo.title}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  {new Date(todo.createdAt).toLocaleString()}
+                  {todo.createdAt && new Date(todo.createdAt).toLocaleString()}
                   {todo.completedAt &&
                     ` • Completed ${new Date(todo.completedAt).toLocaleString()}`}
                 </p>
               </div>
               <button
-                onClick={() => deleteMutation.mutate(todo.id)}
+                onClick={() => deleteMutation.mutate(todo.id!)}
                 disabled={deleteMutation.isPending}
                 className="opacity-0 group-hover:opacity-100 px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
               >
