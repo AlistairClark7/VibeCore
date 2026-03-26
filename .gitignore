@@ -49,6 +49,9 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
+# Vite build output
+**/wwwroot/app/assets/
+
 # Node.js build artifacts
 node_modules/
 

@@ -1,32 +1,49 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  useTodos,
-  useCreateTodo,
-  useUpdateTodo,
-  useDeleteTodo,
-  useCompleteTodo,
-} from "../api/todos";
+  useGetApiTodos,
+  getGetApiTodosQueryKey,
+  usePostApiTodos,
+  usePutApiTodosId,
+  useDeleteApiTodosId,
+  usePatchApiTodosIdComplete,
+} from "../api/todos/todos";
 
 export default function TodoList() {
   const [newTodoTitle, setNewTodoTitle] = useState("");
+  const queryClient = useQueryClient();
 
-  const { data: todos = [], isLoading, error } = useTodos();
-  const createMutation = useCreateTodo();
-  const updateMutation = useUpdateTodo();
-  const deleteMutation = useDeleteTodo();
-  const completeMutation = useCompleteTodo();
+  const invalidateTodos = () =>
+    queryClient.invalidateQueries({ queryKey: getGetApiTodosQueryKey() });
+
+  const { data: todos = [], isLoading, error } = useGetApiTodos({
+    query: { refetchInterval: 5000 },
+  });
+  const createMutation = usePostApiTodos({
+    mutation: { onSuccess: invalidateTodos },
+  });
+  const updateMutation = usePutApiTodosId({
+    mutation: { onSuccess: invalidateTodos },
+  });
+  const deleteMutation = useDeleteApiTodosId({
+    mutation: { onSuccess: invalidateTodos },
+  });
+  const completeMutation = usePatchApiTodosIdComplete({
+    mutation: { onSuccess: invalidateTodos },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodoTitle.trim()) return;
-    createMutation.mutate({ title: newTodoTitle, isCompleted: false });
+    createMutation.mutate({ data: { title: newTodoTitle, isCompleted: false } });
+    setNewTodoTitle("");
   };
 
   if (error) {
     return (
       <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4">
         <p className="text-red-800 dark:text-red-300">
-          Error loading todos: {error.message}
+          Error loading todos: {String(error)}
         </p>
       </div>
     );
@@ -86,12 +103,15 @@ export default function TodoList() {
                 checked={todo.isCompleted}
                 onChange={() => {
                   if (!todo.isCompleted) {
-                    completeMutation.mutate(todo.id!);
+                    completeMutation.mutate({ id: todo.id! });
                   } else {
                     updateMutation.mutate({
-                      ...todo,
-                      isCompleted: false,
-                      completedAt: null,
+                      id: todo.id!,
+                      data: {
+                        ...todo,
+                        isCompleted: false,
+                        completedAt: null,
+                      },
                     });
                   }
                 }}
@@ -110,7 +130,7 @@ export default function TodoList() {
                 </p>
               </div>
               <button
-                onClick={() => deleteMutation.mutate(todo.id!)}
+                onClick={() => deleteMutation.mutate({ id: todo.id! })}
                 disabled={deleteMutation.isPending}
                 className="opacity-0 group-hover:opacity-100 px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
               >
